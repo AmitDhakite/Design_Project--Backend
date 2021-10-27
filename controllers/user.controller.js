@@ -30,6 +30,28 @@ export const register = (req, res) => {
   }
 };
 
+export const login = (req, res) => {
+  try {
+    const { instituteEmail, password } = req.body;
+    console.log(req.body);
+    User.findOne({ instituteEmail }, (error, data) => {
+      if (data === undefined || data === null) {
+        res.status(400).send("User Not Registered");
+      } else
+        bcrypt.compare(password, data.password, function (err, result) {
+          if (result) {
+            console.log(data);
+            res.status(200).json(data);
+          } else {
+            res.status(200).send("Wrong Credentials");
+          }
+        });
+    });
+  } catch (e) {
+    res.status(500).json(e);
+  }
+};
+
 // export const getUsers = (req, res) => {
 //   try {
 //     User.find({}, (err, foundUsers) => {
