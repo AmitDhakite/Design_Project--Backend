@@ -23,7 +23,7 @@ mongoose.connect(
 app.use("/", routes);
 
 app.get("/", (req, res) => {
-  res.send("App deployed1");
+  res.send("App Deployed Design Project");
 });
 
 app.listen(port, function () {
