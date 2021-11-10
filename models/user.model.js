@@ -11,6 +11,10 @@ const userSchema = new Schema({
   instituteName: { type: String },
   batch: { type: String },
   contact: { type: String },
+  electives: {
+    el1: { type: String, default: "" },
+    el2: { type: String, default: "" },
+  },
   password: { type: String },
 });
 

@@ -1,4 +1,5 @@
 import User from "../models/user.model.js";
+import Course from "../models/course.model.js";
 import bcrypt from "bcrypt";
 const saltRounds = 10;
 
@@ -52,29 +53,48 @@ export const login = (req, res) => {
   }
 };
 
-// export const getUsers = (req, res) => {
-//   try {
-//     User.find({}, (err, foundUsers) => {
-//       res.status(200).json(foundUsers);
-//     });
-//   } catch (e) {
-//     res.status(500).json(e);
-//   }
-// };
+export const addElectives = (req, res) => {
+  try {
+    User.findOne({ _id: req.body.userId }, (err, foundUser) => {
+      if (!err) {
+        foundUser.electives.el1 = req.body.el1;
+        foundUser.electives.el2 = req.body.el2;
+        foundUser.save();
+        res.status(200).json(foundUser);
+      } else {
+        res.status(400).json(err);
+      }
+    });
+  } catch (e) {
+    res.status(500).json(e);
+  }
+};
 
-// export const getUserById = (req, res) => {
-//   try {
-//     User.findOne({ _id: req.params.userId }, (err, foundUser) => {
-//       if (!err) {
-//         res.status(200).json(foundUser);
-//       } else {
-//         res.status(400).json(err);
-//       }
-//     });
-//   } catch (e) {
-//     res.status(400).json(e);
-//   }
-// };
+export const getSelectedElectives = (req, res) => {
+  try {
+    User.findOne({ _id: req.body.userId }, (err, foundUser) => {
+      if (!err) {
+        Course.find({}, (er, foundCourses) => {
+          if (!er) {
+            const e1 = foundCourses.find(
+              (element) => element.name === foundUser.electives.el1
+            );
+            const e2 = foundCourses.find(
+              (element) => element.name === foundUser.electives.el2
+            );
+            res.status(200).json([e1, e2]);
+          } else {
+            res.status(400).json(er);
+          }
+        });
+      } else {
+        res.status(400).json(err);
+      }
+    });
+  } catch (e) {
+    res.status(400).json(e);
+  }
+};
 
 // export const editUser = (req, res) => {
 //   try {
